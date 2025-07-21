@@ -1,0 +1,7 @@
+#!/usr/bin/stylelint -c
+
+extends:
+  - stylelint-config-standard
+rules:
+  color-hex-length: long
+  font-family-name-quotes: always-unless-keyword
