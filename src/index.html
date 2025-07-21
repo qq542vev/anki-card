@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	lang="ja"
+	xml:lang="ja"
+	about=""
+	typeof="schema:WebApplication"
+>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="application-name" content="暗記カード生成器" />
+		<meta name="author" property="dc11:creator" content="qq542vev" />
+		<meta name="copyright" property="dc11:rights" content="Copyright © 2025-2025 qq542vev. Some rights reserved." />
+		<meta name="dcterms.created" property="dcterms:created" datatype="dcterms:W3CDTF" content="2025-07-20" />
+		<meta name="dcterms.modified" property="dcterms:modified" datatype="dcterms:W3CDTF" content="2025-07-20" />
+		<meta name="keywords" property="schema:keywords" content="暗記カード,印刷" />
+		<meta name="robots" content="index,follow" />
+		<meta name="version" property="schema:version" content="1.0.0" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+		<title property="dcterms:title">暗記カード生成器</title>
+
+		<link rel="canonical owl:sameAs" href="https://purl.org/meta/anki-card/" />
+		<link rel="author dcterms:creator" href="https://purl.org/meta/me/" />
+		<link rel="start" title="Start page" href="#" />
+		<link rel="copyright license" title="Creative Commons License" href="https://creativecommons.org/licenses/by/4.0/" />
+		<link rel="dcterms:conformsTo" title="Valid HTML+RDFa 1.1" href="http://www.w3.org/TR/html-rdfa/" />
+		<link rel="profile grddl:profileTransformation" href="http://ns.inria.fr/grddl/rdfa/" />
+		<link rel="stylesheet" type="text/css" href="style.css" />
+
+		<script type="text/javascript" src="main.js"></script>
+		<style id="card-style" type="text/css"></style>
+	</head>
+	<body>
+		<header id="header">
+			<form id="form" action="?" method="get">
+				<p><textarea id="csv" title="# 最大4列のCSV文字列を入力してください。&#xA;問題,解答,問題のCSS(省略可),解答のCSS(省略可)" placeholder="# 最大4列のCSV文字列を入力してください。&#xA;例) 問題,解答,問題のCSS(省略可),解答のCSS(省略可)&#xA;H,水素,color:blue;&#xA;He,ヘリウム,color:orange;&#xA;Na,ナトリウム,color:green;,color:gray;" required="required" name="csv">WebブラウザーのJavaScriptを有効にしてください。</textarea></p>
+
+				<ul>
+					<li><label for="row"><select id="row" size="1" name="row">
+						<option value="1">1</option>
+						<option value="2">2</option>
+						<option value="3">3</option>
+						<option value="4">4</option>
+						<option value="5">5</option>
+						<option value="6" selected="selected">6</option>
+						<option value="7">7</option>
+						<option value="8">8</option>
+						<option value="9">9</option>
+						<option value="10">10</option>
+						<option value="11">11</option>
+						<option value="12">12</option>
+						<option value="13">13</option>
+						<option value="14">14</option>
+						<option value="15">15</option>
+						<option value="16">16</option>
+						<option value="17">17</option>
+						<option value="18">18</option>
+						<option value="19">19</option>
+						<option value="20">20</option>
+					</select>行</label></li>
+					<li><label for="col"><select id="col" size="1" name="col">
+						<option value="1">1</option>
+						<option value="2">2</option>
+						<option value="3">3</option>
+						<option value="4" selected="selected">4</option>
+						<option value="5">5</option>
+						<option value="6">6</option>
+						<option value="7">7</option>
+						<option value="8">8</option>
+						<option value="9">9</option>
+						<option value="10">10</option>
+						<option value="11">11</option>
+						<option value="12">12</option>
+						<option value="13">13</option>
+						<option value="14">14</option>
+						<option value="15">15</option>
+						<option value="16">16</option>
+						<option value="17">17</option>
+						<option value="18">18</option>
+						<option value="19">19</option>
+						<option value="20">20</option>
+					</select>列</label></li>
+					<li><label for="rev">逆順方向: <select id="rev" size="1" name="rev">
+						<option value="horizontal" selected="selected">水平</option>
+						<option value="vertical">垂直</option>
+						<option value="both">両方</option>
+						<option value="none">無</option>
+					</select></label></li>
+					<li><label for="width">表の横幅: <input id="width" required="required" name="width" type="number" min="5" step="any" value="297" />mm</label></li>
+					<li><label for="height">表の縦幅: <input id="height" required="required" name="height" type="number" min="5" step="any" value="210" />mm</label></li>
+					<li><label for="outer">外側の線: <input id="outer" required="required" name="outer" type="number" min="0" step="0.1" value="0" />mm</label></li>
+					<li><label for="inner">内側の線: <input id="inner" required="required" name="inner" type="number" min="0" step="0.1" value="0.3" />mm</label></li>
+					<li><label for="front-font-size">表のフォントサイズ: <input id="front-font-size" required="required" name="front_font_size" type="number" min="0" step="0.1" value="22" />pt</label></li>
+					<li><label for="back-font-size">裏のフォントサイズ: <input id="back-font-size" required="required" name="back_font_size" type="number" min="0" step="0.1" value="18" />pt</label></li>
+					<li><label for="grid">グリッド線の間隔: <input id="grid" required="required" name="grid" type="number" min="0" step="any" value="0" />mm</label></li>
+					<li><label title="問題と解答でHTMLタグが有効になります。" for="html">HTMLタグを有効: <input id="html" name="html" type="checkbox" value="1" /></label></li>
+					<li><button type="button" onclick="print();">印刷</button></li>
+				</ul>
+			</form>
+		</header>
+
+		<main id="main"></main>
+
+		<footer id="footer">
+			<nav>
+				<ul id="footer-nav">
+					<li id="go-to-top"><a href="#top" onclick="window.scrollTo(0, 0); return false;">ページの一番上に移動</a></li>
+					<li id="repository"><a href="https://github.com/qq542vev/anki-card">リポジトリ</a></li>
+					<li id="download"><a href="https://purl.org/meta/anki-card/download">ダウンロード</a></li>
+					<li id="license"><a href="https://www.gnu.org/licenses/agpl-3.0.txt">ライセンス</a></li>
+				</ul>
+			</nav>
+		</footer>
+	</body>
+</html>

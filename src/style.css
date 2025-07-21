@@ -1,0 +1,163 @@
+@charset "UTF-8";
+
+@import url("../node_modules/normalize.css/normalize.css");
+
+/** File: style.css
+ *
+ * 「暗記カード生成器」用のスタイルシート
+ *
+ * Metadata:
+ *
+ *   id - 962bfed3-63b6-4a62-827a-c3fc740e6828
+ *   author - <qq542vev at https://purl.org/meta/me/>
+ *   version - 1.0.0
+ *   created - 2025-07-21
+ *   modified - 2025-07-21
+ *   copyright - Copyright (C) 2025-2025 qq542vev. All rights reserved.
+ *   license - <AGPL-3.0-only at https://www.gnu.org/licenses/agpl-3.0.txt>
+ *
+ * See Also:
+ *
+ *   * <Project homepage at https://github.com/qq542vev/anki-card>
+ *   * <Bag report at https://github.com/qq542vev/anki-card/issues>
+ */
+
+body {
+	margin: 0 auto;
+	font-family: "Arial", sans-serif;
+	line-height: 1.6;
+	counter-reset: card-table;
+}
+
+header {
+	margin: 1em 1.5em;
+	padding: 0.5em 1em;
+	background: #B0C0C0;
+}
+
+header ul {
+	padding: 0;
+	display: flex;
+	flex-wrap: wrap;
+}
+
+header ul li {
+	display: block;
+}
+
+header ul li+li::before {
+	padding: 0 0.35em;
+	content: "|";
+	color: #606060;
+}
+
+textarea {
+	width: 100%;
+	height: 240px;
+	font-family: monospace, sans-serif;
+	white-space: pre;
+}
+
+input[type="number"] {
+	width: 4em;
+}
+
+textarea:focus, input:focus {
+	background: #FFFFE8;
+}
+
+.error {
+	border: 1px solid #FFC0CB;
+	padding: 0.3em;          
+	background: #FFF4F6;
+}
+
+table {
+	box-sizing: border-box;
+	margin: 1em auto;
+	border: 0 solid #000000;
+	padding: 0;
+	border-collapse: collapse;
+	table-layout: fixed;
+	background-image:
+		linear-gradient(0deg, #D0D0D0 0, #D0D0D0 1px, transparent 1px),
+		linear-gradient(90deg, #D0D0D0 0, #D0D0D0 1px, transparent 1px);
+	background-origin: border-box;
+}
+
+table::before {
+	display: table-caption;
+	border-bottom: 1px solid #909090;
+	padding: 0.2em;
+	background: #F0F0F0;
+	text-align: center;
+	font-weight: bold;
+	counter-increment: card-table;
+	content: "Page: " counter(card-table);
+}
+
+td {
+	border: 0 dashed #000000;
+	padding: 0 5mm;
+	overflow-wrap: break-word;
+	text-align: center;
+	font-family: serif;
+}
+
+td:first-child {
+	border-left: none;
+}
+
+td:last-child {
+	border-right: none;
+}
+
+td:hover {
+	text-decoration: underline;
+}
+
+tr:first-of-type td {
+	border-top: none;
+}
+
+tr:last-of-type td {
+	border-bottom: none;
+}
+
+footer {
+	margin: 1em 1.5em;
+	border-top: 1px solid #909090;
+}
+
+#footer-nav {
+	margin: 0.5em 0;
+	padding: 0;
+}
+
+#footer-nav li {
+	display: inline;
+}
+
+#footer-nav li+li::before {
+	content: "- "
+}
+
+@page {
+	margin: 0;
+}
+
+@media print {
+	header, footer, input, table::before {
+		display: none;
+	}
+
+	table {
+		page-break-after: always;
+		margin: 0 auto;
+		background: none;
+	}
+
+	td:target {
+		background: none;
+	}
+}
