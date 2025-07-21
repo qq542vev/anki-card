@@ -1,0 +1,8 @@
+#!/usr/bin/env xdg-open
+
+[Desktop Entry]
+Type=Application
+Version=1.5
+Name=暗記カード生成器
+Exec=xdg-open https://purl.org/meta/anki-card/
+Terminal=false
