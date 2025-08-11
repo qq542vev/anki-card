@@ -1,0 +1,12 @@
+#!/usr/bin/docker-compose -f
+
+name: anki-card
+services:
+  make:
+    build: .
+    entrypoint: "gmake"
+    volumes:
+      - .:/work
+      - node_modules:/work/node_modules
+volumes:
+  node_modules:
