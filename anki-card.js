@@ -15,8 +15,7 @@
 
 const { executablePath, launch, ProtocolError, TimeoutError } = require('puppeteer');
 const { getSize: paperSize } = require('paper-size');
-//const { readFileSync, promises: { readFile } } = require('fs');
-const fs = require('fs');
+const fs = require('fs/promises');
 const cl = require('convert-length');
 const { Command, Argument, Option, InvalidArgumentError } = require('commander');
 const { URL, pathToFileURL } = require('url');
@@ -31,7 +30,7 @@ const { pipeline } = require('stream/promises');
 async function main(argv = process.argv) {
 	const prog = await cmd().parseAsync(argv);
 	const opt = prog.opts();
-	const params = new URLSearchParams({
+	const url = opt.url + new URLSearchParams({
 		csv: await concat(prog.args.length ? prog.args : ['-']),
 		row: opt.matrix.row,
 		col: opt.matrix.col,
@@ -43,34 +42,43 @@ async function main(argv = process.argv) {
 		front_font_size: opt.fontSize.front,
 		back_font_size: opt.fontSize.back,
 		...(opt.html && { html: 1 })
-	});
+	}).toString();
 
 	try {
-		await generate(
-			opt.url + params.toString(),
-			{
-				executablePath: opt.chromePath,
-				args: opt.chromeArg,
-				timeout: opt.timeout
-			},
-			{
-				waitUntil: ['load', 'networkidle0'],
-				timeout: opt.timeout
-			},
-			{
-				path: opt.output,
-				printBackground: true,
-				margin: opt.margin,
-				scale: opt.scale,
-				width: opt.format.width + 'mm',
-				height: opt.format.height + 'mm',
-				displayHeaderFooter: true,
-				headerTemplate: opt.header,
-				footerTemplate: opt.footer,
-				timeout: opt.timeout,
-				title: opt.title
+		switch(opt.action) {
+			case 'url':
+				process.stdout.write(url);
+				break;
+			case 'browser':
+				await (await import('open')).default(url);
+				break;
+			case 'pdf':
+				await generate(
+					url,
+					{
+						executablePath: opt.chromePath,
+						args: opt.chromeArg,
+						timeout: opt.timeout
+					},
+					{
+						waitUntil: ['load', 'networkidle0'],
+						timeout: opt.timeout
+					},
+					{
+						path: opt.output,
+						printBackground: true,
+						margin: opt.margin,
+						scale: opt.scale,
+						width: opt.format.width + 'mm',
+						height: opt.format.height + 'mm',
+						displayHeaderFooter: true,
+						headerTemplate: opt.header,
+						footerTemplate: opt.footer,
+						timeout: opt.timeout,
+						title: opt.title
+					}
+				);
 			}
-		);
 	} catch(err) {
 		console.error(err.stack || err);
 
@@ -265,7 +273,7 @@ function cmd() {
 					return pathToFileURL(arg).toString() + '#';
 				}
 			})
-			.default('data:text/html;charset=UTF-8,' + encodeURIComponent(fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8')) + '#', 'Data URI')
+			.default(pathToFileURL(path.join(__dirname, 'index.html')) + '#')
 		)
 		.option('--html', 'カード生成時のHTMLは有効。')
 		.option('--no-html', 'カード生成時のHTMLは無効。')
@@ -324,7 +332,12 @@ function cmd() {
 
 				throw new InvalidArgumentError('非負整数を指定可能です。');
 		}, 60000)
-		.optionsGroup('情報オプション')
+		.optionsGroup('動作モードオプション')
+		.addOption(
+			new Option('--action <mode>', '動作モードの指定。')
+			.choices(['url', 'browser', 'pdf'])
+			.default('pdf')
+		)
 		.helpOption('-h, --help', 'ヘルプメッセージを表示して終了する。')
 		.version('1.0.0', '-V, --version', 'バージョン番号を表示して終了する。')
 		.exitOverride((err) => {
@@ -342,9 +355,9 @@ function cmd() {
  * @return {Promise<string>} 連結後のCSV文字列
  */
 async function concat(files = ['-']) {
-  return files.map((file, i) => {
+	return files.map((file, i) => {
 		if(file !== '-') {
-			return fs.promises.readFile(file, 'utf8');
+			return fs.readFile(file, 'utf8');
 		} else if(files.slice(0, i).includes('-')) {
 			return Promise.resolve('');
 		} else {
@@ -398,7 +411,7 @@ async function generate(url, browserOpts = {}, gotoOpts = {}, pdfOpts = {}) {
 			await browser.close();
 		}
 
-		throw	err;
+		throw err;
 	}
 }
 
