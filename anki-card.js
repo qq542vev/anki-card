@@ -1,21 +1,25 @@
 #!/usr/bin/env node
 
 /**
- * @file CSVから暗記カード用のPDFを生成する。
+ * @fileoverview CSVから暗記カード用のPDFを生成するプログラム。
+ * @module anki-card
  * @author {@link https://purl.org/meta/me/|qq542vev}
- * @version 2025-08-10
- * @since 2025-08-10
+ * @version 1.0.0
  * @copyright Copyright (C) 2025-2025 qq542vev. All rights reserved.
  * @license {@link https://www.gnu.org/licenses/agpl-3.0.txt|AGPL-3.0-only}
  * @see {@link https://github.com/qq542vev/anki-card|Project homepage}
  * @see {@link https://github.com/qq542vev/anki-card/issues|Bug report}
+ * @dcterms:identifier cdec8c21-864a-42e1-b2be-f4b2c25e93a0
+ * @dcterms:created 2025-08-10
+ * @dcterms:modified 2025-08-10
+ * @dcterms:conformsTo https://262.ecma-international.org/
  */
 
 'use strict';
 
 const { executablePath, launch, ProtocolError, TimeoutError } = require('puppeteer');
 const { getSize: paperSize } = require('paper-size');
-const fs = require('fs/promises');
+const { readFile } = require('fs/promises');
 const cl = require('convert-length');
 const { Command, Argument, Option, InvalidArgumentError } = require('commander');
 const { URL, pathToFileURL } = require('url');
@@ -357,7 +361,7 @@ function cmd() {
 async function concat(files = ['-']) {
 	return files.map((file, i) => {
 		if(file !== '-') {
-			return fs.readFile(file, 'utf8');
+			return readFile(file, 'utf8');
 		} else if(files.slice(0, i).includes('-')) {
 			return Promise.resolve('');
 		} else {

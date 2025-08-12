@@ -1,14 +1,17 @@
 "use strict";
 
 /**
- * @file 「暗記カード生成器」用のJavaScript
+ * @fileoverview 「暗記カード生成器」用のJavaScript
  * @author {@link https://purl.org/meta/me/|qq542vev}
- * @version 2025-07-20
- * @since 2025-07-20
+ * @version 1.0.0
  * @copyright Copyright (C) 2025-2025 qq542vev. All rights reserved.
  * @license {@link https://www.gnu.org/licenses/agpl-3.0.txt|AGPL-3.0-only}
  * @see {@link https://github.com/qq542vev/anki-card|Project homepage}
  * @see {@link https://github.com/qq542vev/anki-card/issues|Bug report}
+ * @dcterms:identifier ff65155a-750d-48dd-adfe-70154f8214b6
+ * @dcterms:created 2025-07-21
+ * @dcterms:modified 2025-08-12
+ * @dcterms:conformsTo https://262.ecma-international.org/
  */
 
 var $ = require("jquery");
