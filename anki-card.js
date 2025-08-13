@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
 /**
- * @fileoverview CSVから暗記カード用のPDFを生成するプログラム。
+ * @file CSVから暗記カード用のPDFを生成するプログラム。
  * @module anki-card
  * @author {@link https://purl.org/meta/me/|qq542vev}
  * @version 1.0.0
  * @copyright Copyright (C) 2025-2025 qq542vev. All rights reserved.
- * @license {@link https://www.gnu.org/licenses/agpl-3.0.txt|AGPL-3.0-only}
+ * @license AGPL-3.0-only
  * @see {@link https://github.com/qq542vev/anki-card|Project homepage}
  * @see {@link https://github.com/qq542vev/anki-card/issues|Bug report}
  * @dcterms:identifier cdec8c21-864a-42e1-b2be-f4b2c25e93a0
@@ -26,6 +26,7 @@ const { URL, pathToFileURL } = require('url');
 const path = require('path');
 const Exit = require('sysexits');
 const { pipeline } = require('stream/promises');
+const { text } = require('stream/consumers');
 
 /**
  * コマンドライン引数からPDFを生成する。
@@ -69,7 +70,6 @@ async function main(argv = process.argv) {
 						timeout: opt.timeout
 					},
 					{
-						path: opt.output,
 						printBackground: true,
 						margin: opt.margin,
 						scale: opt.scale,
@@ -79,9 +79,14 @@ async function main(argv = process.argv) {
 						headerTemplate: opt.header,
 						footerTemplate: opt.footer,
 						timeout: opt.timeout,
-						title: opt.title
+						title: opt.title,
+						...(opt.output !== '-' && { path: opt.output })
 					}
-				);
+				).then((pdf) => {
+					if(opt.output === '-') {
+						process.stdout.write(Buffer.from(pdf));
+					}
+				});
 			}
 	} catch(err) {
 		console.error(err.stack || err);
@@ -98,7 +103,7 @@ async function main(argv = process.argv) {
 
 /**
  * コマンドライン引数のルールを定義する。
- * @return {Command} ルールが定義されたCommandクラス。
+ * @returns {Command} ルールが定義されたCommandクラス。
  */
 function cmd() {
 	/**
@@ -166,17 +171,17 @@ function cmd() {
 	/**
 	 * 紙の寸法名または2つ以内の単位付き数値をmmの縦横寸法に変換する。
 	 * @param {PaperSizeP|PaperSizeL|OneOrTwoValues} arg - 変換する値
-	 * @return {{width: NonNegRealNum, height: NonNegRealNum}} 変換後の縦横寸法
+	 * @returns {{width: NonNegRealNum, height: NonNegRealNum}} 変換後の縦横寸法
 	 * @throws {InvalidArgumentError} argが不正な値
 	 */
 	function formatValidate(arg) {
-		let size;
+		let size = null;
 
-		if(size = paperSize(arg)) {
+		if((size = paperSize(arg))) {
 			return { width: size[0], height: size[1] };
 		}
 
-		if(size = paperSize(arg.replace(/:L$/, ''))) {
+		if((size = paperSize(arg.replace(/:L$/, '')))) {
 			return { width: size[1], height: size[0] };
 		}
 
@@ -191,7 +196,7 @@ function cmd() {
 	 * 複数の単位付き数値を他の単位の数値に変換する。
 	 * @param {MultiNonNegRealNumWithOptUnit} str - 変換する値
 	 * @param {Unit} [unit] - 変換先の単位
-	 * @return {NonNegRealNum[]} 変換後の数値
+	 * @returns {NonNegRealNum[]} 変換後の数値
 	 * @throws {InvalidArgumentError} strが不正な値
 	 */
 	function unitConvert(str, unit = 'mm') {
@@ -211,11 +216,11 @@ function cmd() {
 	 * @param {OneOrTwoValues} arg - 変換する値
 	 * @param {string[]} pair - 2つの値の配列
 	 * @param {Unit} [unit] - 変換先の単位
-	 * @return {{ [key: string]: NonNegRealNum }} 変換後の数値
+	 * @returns {{ [key: string]: NonNegRealNum }} 変換後の数値
 	 * @throws {InvalidArgumentError} argが不正な値
 	 */
 	function pairValidate(arg, pair, unit = 'mm') {
-		const size = unitConvert(arg);
+		const size = unitConvert(arg, unit);
 
 		if(size.length <= 2) {
 			return { [pair[0]]: size[0], [pair[1]]: (size[1] ?? size[0]) };
@@ -248,7 +253,7 @@ function cmd() {
 		.addOption(
 			new Option('-m, --matrix <matrix>', 'カードテーブルの行数・列数。')
 			.argParser((arg) => {
-				const match = arg.match(/^([1-2][0-9]?|[3-9]|30)(?:,([1-2][0-9]?|[3-9]|30))?$/);
+				const match = arg.match(/^([1-9][0-9]*)(?:,([1-9][0-9]*))?$/);
 
 				if(match) {
 					return { row: Number(match[1]), col: Number(match[2] ?? match[1]) };
@@ -295,8 +300,8 @@ function cmd() {
 				if(size.length <= 4) {
 					return {
 						top: size[0],
-						bottom: (size[2] ?? size[0]),
 						right: (size[1] ?? size[0]),
+						bottom: (size[2] ?? size[0]),
 						left: ((size[3] ?? size[1]) ?? size[0])
 					};
 				}
@@ -356,19 +361,15 @@ function cmd() {
 /**
  * 複数のCSVファイルを連結する。
  * @param {string[]} [files] - CSVファイルのリスト
- * @return {Promise<string>} 連結後のCSV文字列
+ * @returns {Promise<string>} 連結後のCSV文字列
  */
 async function concat(files = ['-']) {
 	return files.map((file, i) => {
-		if(file !== '-') {
-			return readFile(file, 'utf8');
-		} else if(files.slice(0, i).includes('-')) {
-			return Promise.resolve('');
-		} else {
-			const { text } = require('stream/consumers');
+		if(file !== '-') return readFile(file, 'utf8');
 
-			return text(process.stdin);
-		}	
+		if(files.slice(0, i).includes('-')) return Promise.resolve('');
+
+		return text(process.stdin);
 	}).reduce(async (accP, currP) => {
 		const acc = await accP, curr = await currP;
 		
@@ -382,9 +383,10 @@ async function concat(files = ['-']) {
  * @param {import('puppeteer').LaunchOptions} [browserOpts] - ブラウザ起動時のオプション
  * @param {import('puppeteer').GoToOptions} [gotoOpts] - ページ移動時のオプション
  * @param {import('puppeteer').PDFOptions & { title?: string }} [pdfOpts] - PDF変換時のオプション
+ * @returns {Promise<Unit8Array>} PDFデータ
  */
 async function generate(url, browserOpts = {}, gotoOpts = {}, pdfOpts = {}) {
-	let browser;
+	let browser = null;
 
 	try {
 		browser = await launch(browserOpts);
@@ -403,13 +405,9 @@ async function generate(url, browserOpts = {}, gotoOpts = {}, pdfOpts = {}) {
 			delete pdfOpts.title;
 		}
 
-		if(pdfOpts.path === '-') {
-			await pipeline(await page.createPDFStream(pdfOpts), process.stdout);
-		} else {
-			await page.pdf(pdfOpts);
-		}
-
-		await browser.close();
+		return page.pdf(pdfOpts).then((pdf) => {
+			return browser.close().then(() => pdf);
+		});
 	} catch(err) {
 		if(browser?.close) {
 			await browser.close();
