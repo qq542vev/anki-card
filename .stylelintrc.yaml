@@ -1,4 +1,4 @@
-#!/usr/bin/stylelint -c
+#!/usr/local/bin/stylelint -c
 
 extends:
   - stylelint-config-standard
