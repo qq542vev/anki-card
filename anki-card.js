@@ -11,7 +11,7 @@
  * @see {@link https://github.com/qq542vev/anki-card/issues|Bug report}
  * @dcterms:identifier cdec8c21-864a-42e1-b2be-f4b2c25e93a0
  * @dcterms:created 2025-08-10
- * @dcterms:modified 2025-08-10
+ * @dcterms:modified 2025-08-15
  * @dcterms:conformsTo https://262.ecma-international.org/
  */
 
@@ -19,13 +19,12 @@
 
 const { executablePath, launch, ProtocolError, TimeoutError } = require('puppeteer');
 const { getSize: paperSize } = require('paper-size');
-const { readFile } = require('fs/promises');
+const { readFile, writeFile } = require('fs/promises');
 const cl = require('convert-length');
 const { Command, Argument, Option, InvalidArgumentError } = require('commander');
 const { URL, pathToFileURL } = require('url');
 const path = require('path');
 const Exit = require('sysexits');
-const { pipeline } = require('stream/promises');
 const { text } = require('stream/consumers');
 
 /**
@@ -48,46 +47,61 @@ async function main(argv = process.argv) {
 		back_font_size: opt.fontSize.back,
 		...(opt.html && { html: 1 })
 	}).toString();
+	const browserOpts = {
+		executablePath: opt.chromePath,
+		args: opt.chromeArg,
+		timeout: opt.timeout
+	};
+	const gotoOpts = {
+		waitUntil: ['load', 'networkidle0'],
+		timeout: opt.timeout
+	};
+	let save = null;
 
 	try {
 		switch(opt.action) {
 			case 'url':
-				process.stdout.write(url);
+				save = url;
 				break;
 			case 'browser':
 				await (await import('open')).default(url);
 				break;
-			case 'pdf':
-				await generate(
-					url,
-					{
-						executablePath: opt.chromePath,
-						args: opt.chromeArg,
-						timeout: opt.timeout
-					},
-					{
-						waitUntil: ['load', 'networkidle0'],
-						timeout: opt.timeout
-					},
-					{
-						printBackground: true,
-						margin: opt.margin,
-						scale: opt.scale,
-						width: opt.format.width + 'mm',
-						height: opt.format.height + 'mm',
-						displayHeaderFooter: true,
-						headerTemplate: opt.header,
-						footerTemplate: opt.footer,
-						timeout: opt.timeout,
-						title: opt.title,
-						...(opt.output !== '-' && { path: opt.output })
-					}
-				).then((pdf) => {
-					if(opt.output === '-') {
-						process.stdout.write(Buffer.from(pdf));
-					}
+			case 'html':
+				save = await generateHTML(url, browserOpts, gotoOpts, async (page) => {
+					await page.evaluate((title) => {
+						document.title = title ?? document.title;
+						document.querySelectorAll('script, header, footer').forEach(elem => {
+							elem.remove();
+						});
+					}, opt.title);
 				});
-			}
+				break;
+			case 'pdf':
+				save = await generatePDF(url, browserOpts, gotoOpts, {
+					printBackground: true,
+					margin: opt.margin,
+					scale: opt.scale,
+					width: opt.format.width + 'mm',
+					height: opt.format.height + 'mm',
+					displayHeaderFooter: true,
+					headerTemplate: opt.header,
+					footerTemplate: opt.footer,
+					timeout: opt.timeout,
+				}, async (page) => {
+					await page.evaluate((title) => {
+						document.title = title ?? document.title;
+					}, opt.title);
+				});
+				break;
+		}
+
+		if(!save) return;
+
+		if(opt.output === '-') {
+			process.stdout.write(save);
+		} else {
+			writeFile(opt.output, save);
+		}
 	} catch(err) {
 		console.error(err.stack || err);
 
@@ -310,7 +324,6 @@ function cmd() {
 			})
 			.default({ top: '0mm', bottom: '0mm', right: '0mm', left: '0mm' }, '0mm')
 		)
-		.option('-O, --output <output>', '出力ファイル名。', '-')
 		.addOption(
 			new Option('-S, --scale <scale>', '出力内容の縮尺。')
 			.argParser((arg) => {
@@ -341,12 +354,14 @@ function cmd() {
 
 				throw new InvalidArgumentError('非負整数を指定可能です。');
 		}, 60000)
-		.optionsGroup('動作モードオプション')
+		.optionsGroup('出力オプション')
 		.addOption(
 			new Option('--action <mode>', '動作モードの指定。')
-			.choices(['url', 'browser', 'pdf'])
+			.choices(['url', 'browser', 'html', 'pdf'])
 			.default('pdf')
 		)
+		.option('-o, --output <output>', '出力ファイル名。', '-')
+		.optionsGroup('動作モードオプション')
 		.helpOption('-h, --help', 'ヘルプメッセージを表示して終了する。')
 		.version('1.0.0', '-V, --version', 'バージョン番号を表示して終了する。')
 		.exitOverride((err) => {
@@ -376,38 +391,86 @@ async function concat(files = ['-']) {
 		return acc + ((acc && curr) ? '\r\n' : '') + curr.replace(/\r?\n$/, '');
 	}, Promise.resolve(''));
 }
+/**
+ * 開いたページを操作する。
+ * @callback pageModified
+ * @param {import('puppeteer').Page} page - 操作対象のページ
+ * @returns {Promise<void>}
+ */
 
 /**
  * URLからPDFを作成する。
  * @param {string} url - URL
  * @param {import('puppeteer').LaunchOptions} [browserOpts] - ブラウザ起動時のオプション
  * @param {import('puppeteer').GoToOptions} [gotoOpts] - ページ移動時のオプション
- * @param {import('puppeteer').PDFOptions & { title?: string }} [pdfOpts] - PDF変換時のオプション
+ * @param {import('puppeteer').PDFOptions} [pdfOpts] - PDF変換時のオプション
+ * @param {pageModified} [callback] - 出力前の任意のページ操作。
  * @returns {Promise<Unit8Array>} PDFデータ
  */
-async function generate(url, browserOpts = {}, gotoOpts = {}, pdfOpts = {}) {
+async function generatePDF(url, browserOpts = {}, gotoOpts = {}, pdfOpts = {}, callback = (async () => {})) {
+	const	{ browser, page } = await getPage(url, browserOpts, gotoOpts);
+
+	try {
+		const margin = ['top', 'right', 'bottom', 'left'].map((pos) => {
+			return pdfOpts.margin[pos] ? `margin-${pos}: ${pdfOpts.margin[pos]};` : '';
+		}).join('');
+		await page.addStyleTag({ content: `@page {${margin}}` });
+
+		await callback(page);
+
+		return page.pdf(pdfOpts).then((pdf) => {
+			return browser.close().then(() => pdf);
+		});
+	} catch(err) {
+		await browser.close();
+
+		throw err;
+	}
+}
+
+/**
+ * URLからHTMLを作成する。
+ * @param {string} url - URL
+ * @param {import('puppeteer').LaunchOptions} [browserOpts] - ブラウザ起動時のオプション
+ * @param {import('puppeteer').GoToOptions} [gotoOpts] - ページ移動時のオプション
+ * @param {pageModified} [callback] - 出力前の任意のページ操作。
+ * @returns {Promise<string>} HTML文字列。
+ */
+async function generateHTML(url, browserOpts = {}, gotoOpts = {}, callback = (async () => {})) {
+	const	{ browser, page } = await getPage(url, browserOpts, gotoOpts);
+
+	try {
+		await callback(page);
+
+		return page.content().then((html) => {
+			return browser.close().then(() => html);
+		});
+	} catch(err) {
+		await browser.close();
+
+		throw err;
+	}
+}
+
+/**
+ * URLをPuppeteerで開く。
+ * @param {string} url - URL
+ * @param {import('puppeteer').LaunchOptions} [browserOpts] - ブラウザ起動時のオプション
+ * @param {import('puppeteer').GoToOptions} [gotoOpts] - ページ移動時のオプション
+ * @returns {Promise<{browser: import('puppeteer').Browser, page: import('puppeteer').Page}>} BrowserとPage。
+ */
+async function getPage(url, browserOpts = {}, gotoOpts = {}) {
 	let browser = null;
 
 	try {
 		browser = await launch(browserOpts);
 		const page = await browser.newPage();
 		await page.goto(url, gotoOpts);
-		const margin = ['top', 'right', 'bottom', 'left'].map((pos) => {
-			return pdfOpts.margin[pos] ? `margin-${pos}: ${pdfOpts.margin[pos]};` : '';
-		}).join('');
-		await page.addStyleTag({ content: `@page {${margin}}` });
 
-		if(pdfOpts.title !== undefined) {
-			await page.evaluate((title) => {
-				document.title = title;
-			}, pdfOpts.title);
-
-			delete pdfOpts.title;
-		}
-
-		return page.pdf(pdfOpts).then((pdf) => {
-			return browser.close().then(() => pdf);
-		});
+		return {
+			browser: browser,
+			page: page
+		};
 	} catch(err) {
 		if(browser?.close) {
 			await browser.close();
@@ -417,10 +480,10 @@ async function generate(url, browserOpts = {}, gotoOpts = {}, pdfOpts = {}) {
 	}
 }
 
-if (require.main === module) {
+if(require.main === module) {
 	(async () => {
 		await main();
 	})();
 } else{
-	module.exports = { main, cmd, concat, generate };
+	module.exports = { main, cmd, concat, generateHTML, generatePDF, getPage };
 }
