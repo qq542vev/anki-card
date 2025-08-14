@@ -1,11 +1,11 @@
 "use strict";
 
 /**
- * @fileoverview 「暗記カード生成器」用のJavaScript
+ * @file 「暗記カード生成器」用のJavaScript
  * @author {@link https://purl.org/meta/me/|qq542vev}
  * @version 1.0.0
  * @copyright Copyright (C) 2025-2025 qq542vev. All rights reserved.
- * @license {@link https://www.gnu.org/licenses/agpl-3.0.txt|AGPL-3.0-only}
+ * @license AGPL-3.0-only
  * @see {@link https://github.com/qq542vev/anki-card|Project homepage}
  * @see {@link https://github.com/qq542vev/anki-card/issues|Bug report}
  * @dcterms:identifier ff65155a-750d-48dd-adfe-70154f8214b6
@@ -73,7 +73,7 @@ var rewrite = {
 
 						$.each(cards.slice(i - total + 1, i + 1), function(i, card) {
 							if((i % dom.col.value) === 0) {
-								if(dom.rev.value == "vertical" || dom.rev.value == "both") {
+								if(dom.rev.value === "vertical" || dom.rev.value === "both") {
 									tr = $("<tr>").prependTo(table);
 								} else {
 									tr = $("<tr>").appendTo(table);
@@ -93,7 +93,7 @@ var rewrite = {
 								}, 500);
 							});
 
-							if(dom.rev.value == "horizontal" || dom.rev.value == "both") {
+							if(dom.rev.value === "horizontal" || dom.rev.value === "both") {
 								td.prependTo(tr);
 							} else {
 								td.appendTo(tr);
