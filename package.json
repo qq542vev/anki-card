@@ -11,12 +11,13 @@
   },
   "license": "AGPL-3.0-only",
   "keywords": [
-    "flashcards", "generator"
+    "flashcards",
+    "generator"
   ],
   "description": "CSVから暗記カードのPDFを生成支援するアプリケーション。",
   "homepage": "https://github.com/qq542vev/anki-card",
   "bug": {
-    "url": "https://github.com/qq542vev/anki-card/issues" 
+    "url": "https://github.com/qq542vev/anki-card/issues"
   },
   "dependencies": {
     "commander": "^14.0.0",
@@ -31,6 +32,7 @@
     "browserify": "^17.0.1",
     "clean-css-cli": "^5.6.3",
     "eslint": "^9.31.0",
+    "eslint-plugin-jsdoc": "^50.8.0",
     "html-inline": "^1.2.0",
     "html-minifier": "^4.0.0",
     "jquery": "^3.7.1",
