@@ -18,23 +18,30 @@ var $ = require("jquery");
 var Papa = require("papaparse");
 
 var rewrite = {
-	table: function(form, elem, error) {
-		var dom = form[0];
+	/**
+	 * フォームデータからテーブルを作成する。
+	 * @param {import('jquery').JQuery<HTMLFormElement>} $form - form要素
+	 * @param {import('jquery').JQuery<HTMLElement>} $elem - テーブルを加える要素
+	 * @param {import('jquery').JQuery<HTMLElement>} $error - エラー情報を加える要素
+	 * @returns {void}
+	 */
+	table: function($form, $elem, $error) {
+		var dom = $form[0];
 
 		Papa.parse(dom.csv.value, {
 			delimiter: ",",
 			complete: function(result) {
 				var cards = result.data;
 				var total = dom.row.value * dom.col.value;
-				var table, tr;
+				var table = null, tr = null;
 
-				error.children(".error").remove();
+				$error.children(".error").remove();
 
 				$.each(result.errors, function(i, err) {
-					$("<pre class='error' role='alert'>").append($("<samp>").text("row:" + err.row + " index:" + err.index + " " + err.message)).appendTo(error);
+					$("<pre class='error' role='alert'>").append($("<samp>").text("row:" + err.row + " index:" + err.index + " " + err.message)).appendTo($error);
 				});
 
-				elem.empty();
+				$elem.empty();
 
 				for(var i = cards.length; (i % total) !== 0; i++) {
 					cards.push([]);
@@ -43,7 +50,7 @@ var rewrite = {
 				$.each(cards, function(i, card) {
 					if((i % dom.col.value) === 0) {
 						if((i % total) === 0) {
-							table = $("<table class='front-cards'>").appendTo(elem);
+							table = $("<table class='front-cards'>").appendTo($elem);
 						}
 
 						tr = $("<tr>").appendTo(table);
@@ -69,7 +76,7 @@ var rewrite = {
 					}
 
 					if(((i + 1) % total) === 0) {
-						table = $("<table class='back-cards'>").appendTo(elem);
+						table = $("<table class='back-cards'>").appendTo($elem);
 
 						$.each(cards.slice(i - total + 1, i + 1), function(i, card) {
 							if((i % dom.col.value) === 0) {
@@ -110,11 +117,17 @@ var rewrite = {
 			}
 		});
 	},
-	css: function(form, style) {
-		var dom = form[0];
+	/**
+	 * フォームデータからCSSを作成する。
+	 * @param {import('jquery').JQuery<HTMLFormElement>} $form - form要素
+	 * @param {import('jquery').JQuery<HTMLStyleElement>} $style - style要素
+	 * @returns {void}
+	 */
+	css: function($form, $style) {
+		var dom = $form[0];
 		var col_height = (dom.height.value - (dom.inner.value * (dom.row.value - 1)) - (dom.outer.value * 2)) / dom.row.value;
 
-		style.text(
+		$style.text(
 			"table {" +
 				"border-width:" + dom.outer.value + "mm;" +
 				"width:" + dom.width.value + "mm;" +
@@ -128,12 +141,17 @@ var rewrite = {
 				"font-size:" + dom.front_font_size.value + "pt;" +
 			"} " +
 			"table.back-cards td {" +
-				"font-size:" + dom.back_font_size.value + "pt;" + 
+				"font-size:" + dom.back_font_size.value + "pt;" +
 			"}"
 		);
 	},
-	hash: function(form) {
-		location.hash = "#" + form.serialize();
+	/**
+	 * URLフラグメントにフォームデータをセットする。
+	 * @param {import('jquery').JQuery<HTMLFormElement>} $form - form要素
+	 * @returns {void}
+	 */
+	hash: function($form) {
+		location.hash = "#" + $form.serialize();
 	}
 };
 
@@ -157,6 +175,10 @@ function parseFormData(data) {
 	return result;
 }
 
+/**
+ * DOM読み取り完了後にイベントを構築する。
+ * @returns {void}
+ */
 $(function() {
 	var query = parseFormData(location.hash.slice(1));
 	var form = $("#form");
