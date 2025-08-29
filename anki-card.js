@@ -4,14 +4,14 @@
  * @file CSVから暗記カード用のPDFを生成するプログラム。
  * @module anki-card
  * @author {@link https://purl.org/meta/me/|qq542vev}
- * @version 1.0.0
+ * @version 1.0.1
  * @copyright Copyright (C) 2025-2025 qq542vev. All rights reserved.
  * @license AGPL-3.0-only
  * @see {@link https://github.com/qq542vev/anki-card|Project homepage}
  * @see {@link https://github.com/qq542vev/anki-card/issues|Bug report}
  * @dcterms:identifier cdec8c21-864a-42e1-b2be-f4b2c25e93a0
  * @dcterms:created 2025-08-10
- * @dcterms:modified 2025-08-15
+ * @dcterms:modified 2025-08-29
  * @dcterms:conformsTo https://262.ecma-international.org/
  */
 
@@ -112,7 +112,7 @@ async function main(argv = process.argv) {
 		} else {
 			process.exit(Exit.SOFTWARE);
 		}
-	}	
+	}
 }
 
 /**
@@ -365,10 +365,8 @@ function cmd() {
 		.helpOption('-h, --help', 'ヘルプメッセージを表示して終了する。')
 		.version('1.0.0', '-V, --version', 'バージョン番号を表示して終了する。')
 		.exitOverride((err) => {
-			if(err.code === 'commander.invalidArgument') {
+			if(0 < err.exitCode) {
 				process.exit(Exit.USAGE);
-			} else {
-				process.exit(Exit.SOFTWARE);
 			}
 		});
 }
@@ -387,7 +385,7 @@ async function concat(files = ['-']) {
 		return text(process.stdin);
 	}).reduce(async (accP, currP) => {
 		const acc = await accP, curr = await currP;
-		
+
 		return acc + ((acc && curr) ? '\r\n' : '') + curr.replace(/\r?\n$/, '');
 	}, Promise.resolve(''));
 }
