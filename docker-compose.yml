@@ -8,11 +8,5 @@ services:
     volumes:
       - .:/work
       - node_modules:/work/node_modules
-  gen:
-    build: .
-    entrypoint: "./anki-card.js"
-    volumes:
-      - .:/work
-      - node_modules:/work/node_modules
 volumes:
   node_modules:
