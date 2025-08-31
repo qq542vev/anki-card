@@ -10,7 +10,7 @@
     "flashcards",
     "generator"
   ],
-  "description": "CSVから暗記カードのPDFを生成支援するアプリケーション。",
+  "description": "Webブラウザー環境でCSVから暗記カードのPDFを生成支援するアプリケーション。",
   "homepage": "https://github.com/qq542vev/anki-card",
   "bug": {
     "url": "https://github.com/qq542vev/anki-card/issues"
