@@ -7,8 +7,18 @@
   },
   "license": "AGPL-3.0-only",
   "keywords": [
+    "csv",
+    "education",
     "flashcards",
-    "generator"
+    "generator",
+    "html",
+    "javascript",
+    "offline-first",
+    "onefile",
+    "papaparse",
+		"printing",
+    "single-file",
+    "static-web-app"
   ],
   "description": "CSVを貼るだけで印刷可能な両面暗記カードを生成するシングルファイルアプリ(HTML/CSS/JS)。", 
   "homepage": "https://github.com/qq542vev/anki-card",
