@@ -10,9 +10,9 @@
  *
  *   id - 962bfed3-63b6-4a62-827a-c3fc740e6828
  *   author - <qq542vev at https://purl.org/meta/me/>
- *   version - 1.0.1
+ *   version - 1.0.2
  *   created - 2025-07-21
- *   modified - 2025-08-10
+ *   modified - 2025-09-02
  *   copyright - Copyright (C) 2025-2025 qq542vev. All rights reserved.
  *   license - <AGPL-3.0-only at https://www.gnu.org/licenses/agpl-3.0.txt>
  *
@@ -154,6 +154,5 @@ footer {
 	table {
 		page-break-after: always;
 		margin: 0 auto;
-		background: none;
 	}
 }
