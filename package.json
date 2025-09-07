@@ -1,6 +1,6 @@
 {
   "name": "anki-card",
-  "version": "1.1.1+1",
+  "version": "1.1.2",
   "author": {
     "name": "qq542vev",
     "url": "https://purl.org/meta/me/"
@@ -16,11 +16,11 @@
     "offline-first",
     "onefile",
     "papaparse",
-		"printing",
+    "printing",
     "single-file",
     "static-web-app"
   ],
-  "description": "CSVを貼るだけで印刷可能な両面暗記カードを生成するシングルファイルアプリ(HTML/CSS/JS)。", 
+  "description": "CSVを貼るだけで印刷可能な両面暗記カードを生成するシングルファイルアプリ(HTML/CSS/JS)。",
   "homepage": "https://github.com/qq542vev/anki-card",
   "bug": {
     "url": "https://github.com/qq542vev/anki-card/issues"
@@ -32,7 +32,6 @@
     "anki-card.desktop",
     "index.html"
   ],
-  "dependencies": {},
   "devDependencies": {
     "@eslint/js": "^9.31.0",
     "browserify": "^17.0.1",
@@ -42,6 +41,7 @@
     "html-inline": "^1.2.0",
     "html-minifier": "^4.0.0",
     "jquery": "^3.7.1",
+    "markdownlint-cli": "^0.44.0",
     "normalize.css": "^8.0.1",
     "papaparse": "^5.5.3",
     "stylelint": "^16.21.1",
