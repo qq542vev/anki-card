@@ -38,9 +38,9 @@ NodeJSが利用可能な環境では[暗記カードCLI](https://github.com/qq54
 
 <https://purl.org/meta/anki-card/>にアクセスするか、[リリースページ](https://purl.org/meta/anki-card/download)からダウンロードしてください。NPMからインストールする場合、次のコマンドを実行してください。
 
-~~~
+```sh
 npm install anki-card
-~~~
+```
 
 ## 使い方
 
@@ -61,11 +61,11 @@ npm install anki-card
 
 #### 例
 
-~~~csv
+```csv
 H,水素,color:blue;
 O,酸素
 C,炭素,font-style:italic;
-~~~
+```
 
 3列目・4列目を省略するとデフォルトのスタイルが適用されます。1列目・2列目に含まれるHTMLタグを有効にする場合は、「HTMLタグを有効」にチェックしてください。
 
@@ -99,7 +99,6 @@ HTMLタグを有効にすると任意のHTML(およびスクリプト)が挿入�
  * 反応がない: WebブラウザーでJavaScriptが無効になっている可能性があります。JavaScriptを有効にしてください。
  * CSVが正しく解析されない: 引用符やカンマの扱いを確認してください。内部解析はPapaParseを利用しています。
  * 裏面の順序が合わない: プリンターの両面印刷設定(短辺 / 長辺)を変えてテスト印刷を行うか、あるいは「反転方向」の値を変更して再試行してください。
-
 
 ## よくある質問(FAQ)
 
