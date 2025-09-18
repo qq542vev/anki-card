@@ -44,8 +44,8 @@
     "markdownlint-cli": "^0.44.0",
     "normalize.css": "^8.0.1",
     "papaparse": "^5.5.3",
+    "speckit": "qq542vev/speckit",
     "stylelint": "^16.21.1",
-    "stylelint-config-standard": "^38.0.0",
-    "speckit": "qq542vev/speckit"
+    "stylelint-config-standard": "^38.0.0"
   }
 }
