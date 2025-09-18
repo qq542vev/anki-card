@@ -1,0 +1,1 @@
+../../node_modules/speckit/spec/markdownlint_spec.sh

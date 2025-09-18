@@ -1,4 +1,6 @@
---require spec_helper
+--no-warning-as-failure
+--env SPECKIT_FIND_ARGS="! -path ./.git/* ! -path ./node_modules/*"
+--path "${SHELLSPEC_PROJECT_ROOT}/node_modules/.bin:${PATH}"
 
 ## Default kcov (coverage) options
 # --kcov-options "--include-path=. --path-strip-level=1"

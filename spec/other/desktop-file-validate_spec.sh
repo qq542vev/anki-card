@@ -1,0 +1,1 @@
+../../node_modules/speckit/spec/desktop-file-validate_spec.sh

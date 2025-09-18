@@ -65,10 +65,10 @@ run: index.html
 # =====
 
 pre-check:
-	shellspec -- 'spec/pre'
+	shellspec --env SPECKIT_FIND_ARGS="-path ./src/*" -- 'spec/pre'
 
 post-check: index.html
-	shellspec -- 'spec/post'
+	shellspec --env SPECKIT_FIND_ARGS="-path ./$(<)" -- 'spec/post'
 
 other-check:
 	shellspec -- 'spec/other'

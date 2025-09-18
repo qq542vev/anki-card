@@ -45,6 +45,7 @@
     "normalize.css": "^8.0.1",
     "papaparse": "^5.5.3",
     "stylelint": "^16.21.1",
-    "stylelint-config-standard": "^38.0.0"
+    "stylelint-config-standard": "^38.0.0",
+    "speckit": "qq542vev/speckit"
   }
 }
