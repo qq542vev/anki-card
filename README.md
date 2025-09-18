@@ -11,6 +11,7 @@ Metadata:
 	modified - 2025-09-07
 	copyright - Copyright (C) 2025-2025 qq542vev. Some rights reserved.
 	license - <AGPL-3.0-only at https://www.gnu.org/licenses/agpl-3.0.txt>
+	conforms-to - <https://spec.commonmark.org/current/>
 
 See Also:
 
