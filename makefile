@@ -8,9 +8,9 @@
 ##
 ##   id - be66a354-fd76-4878-b3fb-34816eef6f39
 ##   author - <qq542vev at https://purl.org/meta/me/>
-##   version - 1.0.0
+##   version - 1.0.1
 ##   created - 2025-07-21
-##   modified - 2025-07-21
+##   modified - 2025-09-18
 ##   copyright - Copyright (C) 2025-2025 qq542vev. All rights reserved.
 ##   license - <AGPL-3.0-only at https://www.gnu.org/licenses/agpl-3.0.txt>
 ##   depends - browserify, cleancss, echo, html-inline, html-minifier, npx, rm, shellspec, tidy, uglifyjs, xdg-open
