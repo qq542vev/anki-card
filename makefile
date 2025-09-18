@@ -73,6 +73,8 @@ post-check: index.html
 other-check:
 	shellspec -- 'spec/other'
 
+verify: pre-check post-check other-check
+
 # Docs
 # ====
 
