@@ -27,6 +27,8 @@ body {
 	font-family: "Arial", sans-serif;
 	line-height: 1.6;
 	counter-reset: card-table;
+	background: #FFFFFF;
+	color: #000000;
 }
 
 header {
