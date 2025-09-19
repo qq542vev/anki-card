@@ -1,1 +1,0 @@
-../../node_modules/speckit/spec/shellcheck_spec.sh
