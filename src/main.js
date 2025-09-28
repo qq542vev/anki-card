@@ -2,7 +2,7 @@
 
 /**
  * @file 「暗記カード生成器」用のJavaScript
- * @author {@link https://purl.org/meta/me/|qq542vev}
+ * @author qq542vev ({@link https://purl.org/meta/me/})
  * @version 1.0.0
  * @copyright Copyright (C) 2025-2025 qq542vev. All rights reserved.
  * @license AGPL-3.0-only
