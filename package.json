@@ -1,51 +1,52 @@
 {
-  "name": "anki-card",
-  "version": "1.1.3",
-  "author": {
-    "name": "qq542vev",
-    "url": "https://purl.org/meta/me/"
-  },
-  "license": "AGPL-3.0-only",
-  "keywords": [
-    "csv",
-    "education",
-    "flashcards",
-    "generator",
-    "html",
-    "javascript",
-    "offline-first",
-    "onefile",
-    "papaparse",
-    "printing",
-    "single-file",
-    "static-web-app"
-  ],
-  "description": "CSVを貼るだけで印刷可能な両面暗記カードを生成するシングルファイルアプリ(HTML/CSS/JS)。",
-  "homepage": "https://github.com/qq542vev/anki-card",
-  "bug": {
-    "url": "https://github.com/qq542vev/anki-card/issues"
-  },
-  "files": [
-    "licenses/",
-    "LICENSE.txt",
-    "README.txt",
-    "anki-card.desktop",
-    "index.html"
-  ],
-  "devDependencies": {
-    "@eslint/js": "^9.31.0",
-    "browserify": "^17.0.1",
-    "clean-css-cli": "^5.6.3",
-    "eslint": "^9.31.0",
-    "eslint-plugin-jsdoc": "^50.8.0",
-    "html-inline": "^1.2.0",
-    "html-minifier": "^4.0.0",
-    "jquery": "^3.7.1",
-    "markdownlint-cli": "^0.44.0",
-    "normalize.css": "^8.0.1",
-    "papaparse": "^5.5.3",
-    "speckit": "qq542vev/speckit",
-    "stylelint": "^16.21.1",
-    "stylelint-config-standard": "^38.0.0"
-  }
+	"name": "anki-card",
+	"version": "1.1.3",
+	"author": {
+		"name": "qq542vev",
+		"url": "https://purl.org/meta/me/"
+	},
+	"license": "AGPL-3.0-only",
+	"keywords": [
+		"csv",
+		"education",
+		"flashcards",
+		"generator",
+		"html",
+		"javascript",
+		"offline-first",
+		"onefile",
+		"papaparse",
+		"printing",
+		"single-file",
+		"static-web-app"
+	],
+	"description": "CSVを貼るだけで印刷可能な両面暗記カードを生成するシングルファイルアプリ(HTML/CSS/JS)。",
+	"homepage": "https://github.com/qq542vev/anki-card",
+	"bug": {
+		"url": "https://github.com/qq542vev/anki-card/issues"
+	},
+	"files": [
+		"LICENSE.txt",
+		"README.txt",
+		"anki-card.desktop",
+		"index.html",
+		"licenses/"
+	],
+	"devDependencies": {
+		"@eslint/js": "^9.31.0",
+		"browserify": "^17.0.1",
+		"clean-css-cli": "^5.6.3",
+		"eslint": "^9.31.0",
+		"eslint-config-dublin-core": "^1.0.4",
+		"eslint-plugin-jsdoc": "^50.8.0",
+		"html-inline": "^1.2.0",
+		"html-minifier": "^4.0.0",
+		"jquery": "^3.7.1",
+		"markdownlint-cli": "^0.44.0",
+		"normalize.css": "^8.0.1",
+		"papaparse": "^5.5.3",
+		"speckit": "qq542vev/speckit",
+		"stylelint": "^16.21.1",
+		"stylelint-config-standard": "^38.0.0"
+	}
 }
