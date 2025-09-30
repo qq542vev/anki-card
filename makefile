@@ -8,12 +8,12 @@
 ##
 ##   id - be66a354-fd76-4878-b3fb-34816eef6f39
 ##   author - <qq542vev at https://purl.org/meta/me/>
-##   version - 1.1.0
+##   version - 1.1.1
 ##   created - 2025-07-21
-##   modified - 2025-09-18
+##   modified - 2025-09-30
 ##   copyright - Copyright (C) 2025-2025 qq542vev. All rights reserved.
 ##   license - <AGPL-3.0-only at https://www.gnu.org/licenses/agpl-3.0.txt>
-##   depends - browserify, cleancss, echo, html-inline, html-minifier, npx, rm, shellspec, tidy, uglifyjs, xdg-open
+##   depends - browserify, cleancss, echo, html-inline, html-minifier, npx, rm, shellspec, uglifyjs, xdg-open
 ##
 ## See Also:
 ##
@@ -23,6 +23,8 @@
 # Sp Targets
 # ==========
 
+.POSIX:
+
 .PHONY: all run pre-check post-check other-check verify clean rebuild help version
 
 .SILENT: help version
@@ -30,7 +32,7 @@
 # Macro
 # =====
 
-VERSION = 1.1.0
+VERSION = 1.1.1
 
 SRC = src
 MIN = minified
@@ -103,11 +105,11 @@ help:
 	echo '  all     全てのファイルを作成する。'
 	echo '  run     メインのファイルを開く。'
 	echo '  pre-check'
-	echo '	  ビルド前の検査を行う。'
+	echo '          ビルド前の検査を行う。'
 	echo '  post-check'
-	echo '	  ビルド後の検査を行う。'
+	echo '          ビルド後の検査を行う。'
 	echo '  other-check'
-	echo '	  その他の検査を行う。'
+	echo '          その他の検査を行う。'
 	echo '  verify  全ての検査を行う。'
 	echo '  clean   作成したファイルを削除する。'
 	echo '  rebuild cleanの実行後にallを実行する。'
