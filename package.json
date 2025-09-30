@@ -1,11 +1,7 @@
 {
 	"name": "anki-card",
 	"version": "1.1.3",
-	"author": {
-		"name": "qq542vev",
-		"url": "https://purl.org/meta/me/"
-	},
-	"license": "AGPL-3.0-only",
+	"description": "CSVを貼るだけで印刷可能な両面暗記カードを生成するシングルファイルアプリ(HTML/CSS/JS)。",
 	"keywords": [
 		"csv",
 		"education",
@@ -20,10 +16,14 @@
 		"single-file",
 		"static-web-app"
 	],
-	"description": "CSVを貼るだけで印刷可能な両面暗記カードを生成するシングルファイルアプリ(HTML/CSS/JS)。",
 	"homepage": "https://github.com/qq542vev/anki-card",
 	"bug": {
 		"url": "https://github.com/qq542vev/anki-card/issues"
+	},
+	"license": "AGPL-3.0-only",
+	"author": {
+		"name": "qq542vev",
+		"url": "https://purl.org/meta/me/"
 	},
 	"files": [
 		"LICENSE.txt",
