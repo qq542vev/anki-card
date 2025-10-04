@@ -10,7 +10,7 @@
  * @see {@link https://github.com/qq542vev/anki-card/issues|Bug report}
  * @dcterms:identifier ff65155a-750d-48dd-adfe-70154f8214b6
  * @dcterms:created 2025-07-21
- * @dcterms:modified 2025-08-12
+ * @dcterms:modified 2025-10-04
  * @dcterms:conformsTo https://262.ecma-international.org/
  */
 
@@ -20,9 +20,9 @@ var Papa = require("papaparse");
 var rewrite = {
 	/**
 	 * フォームデータからテーブルを作成する。
-	 * @param {import('jquery').JQuery<HTMLFormElement>} $form - form要素
-	 * @param {import('jquery').JQuery<HTMLElement>} $elem - テーブルを加える要素
-	 * @param {import('jquery').JQuery<HTMLElement>} $error - エラー情報を加える要素
+	 * @param {import("jquery").JQuery<HTMLFormElement>} $form - form要素
+	 * @param {import("jquery").JQuery<HTMLElement>} $elem - テーブルを加える要素
+	 * @param {import("jquery").JQuery<HTMLElement>} $error - エラー情報を加える要素
 	 * @returns {void}
 	 */
 	table: function($form, $elem, $error) {
@@ -119,8 +119,8 @@ var rewrite = {
 	},
 	/**
 	 * フォームデータからCSSを作成する。
-	 * @param {import('jquery').JQuery<HTMLFormElement>} $form - form要素
-	 * @param {import('jquery').JQuery<HTMLStyleElement>} $style - style要素
+	 * @param {import("jquery").JQuery<HTMLFormElement>} $form - form要素
+	 * @param {import("jquery").JQuery<HTMLStyleElement>} $style - style要素
 	 * @returns {void}
 	 */
 	css: function($form, $style) {
@@ -147,7 +147,7 @@ var rewrite = {
 	},
 	/**
 	 * URLフラグメントにフォームデータをセットする。
-	 * @param {import('jquery').JQuery<HTMLFormElement>} $form - form要素
+	 * @param {import("jquery").JQuery<HTMLFormElement>} $form - form要素
 	 * @returns {void}
 	 */
 	hash: function($form) {
