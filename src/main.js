@@ -3,14 +3,14 @@
 /**
  * @file 「暗記カード生成器」用のJavaScript
  * @author qq542vev ({@link https://purl.org/meta/me/})
- * @version 1.0.0
+ * @version 1.1.0
  * @copyright Copyright (C) 2025-2025 qq542vev. All rights reserved.
  * @license AGPL-3.0-only
  * @see {@link https://github.com/qq542vev/anki-card|Project homepage}
  * @see {@link https://github.com/qq542vev/anki-card/issues|Bug report}
  * @dcterms:identifier ff65155a-750d-48dd-adfe-70154f8214b6
  * @dcterms:created 2025-07-21
- * @dcterms:modified 2025-10-04
+ * @dcterms:modified 2025-11-10
  * @dcterms:conformsTo https://262.ecma-international.org/
  */
 
@@ -132,17 +132,18 @@ var rewrite = {
 				"border-width:" + dom.outer.value + "mm;" +
 				"width:" + dom.width.value + "mm;" +
 				"background-size:" + dom.grid.value + "mm " + dom.grid.value + "mm;" +
-			"} " +
+			"}" +
 			"td {" +
 				"border-width:" + dom.inner.value + "mm;" +
 				"height:" + col_height + "mm;" +
-			"} " +
+			"}" +
 			"table.front-cards td {" +
 				"font-size:" + dom.front_font_size.value + "pt;" +
-			"} " +
+			"}" +
 			"table.back-cards td {" +
 				"font-size:" + dom.back_font_size.value + "pt;" +
-			"}"
+			"}" +
+			dom.css.value
 		);
 	},
 	/**
@@ -181,17 +182,17 @@ function parseFormData(data) {
  */
 $(function() {
 	var query = parseFormData(location.hash.slice(1));
-	var form = $("#form");
-	var main = $("#main");
-	var style = $("#card-style");
+	var $form = $("#form"), $main = $("#main");
+	var $css = $("#css"), $cssToggle = $("#css-toggle");
+	var $style = $("#card-style");
 
-	form.submit(function() {
+	$form.submit(function() {
 		return false;
 	});
 
-	form.find(":input[name=csv]").val("");
+	$form.find(":input[name=csv]").val("");
 
-	form.find(":input[name]").each(function() {
+	$form.find(":input[name]").each(function() {
 		var input = $(this);
 
 		if(this.name in query) {
@@ -204,22 +205,32 @@ $(function() {
 
 		if($.inArray(this.name, ["csv", "row", "col", "rev", "html"]) !== -1) {
 			input.change(function() {
-				rewrite.table(form, main, form);
+				rewrite.table($form, $main, $form);
 			});
 		}
 
-		if($.inArray(this.name, ["row", "width", "height", "inner", "outer", "front_font_size", "back_font_size", "grid"]) !== -1) {
+		if($.inArray(this.name, ["row", "width", "height", "inner", "outer", "front_font_size", "back_font_size", "grid", "css"]) !== -1) {
 			input.change(function() {
-				rewrite.css(form, style);
+				rewrite.css($form, $style);
 			});
 		}
 
 		input.change(function() {
-			rewrite.hash(form);
+			rewrite.hash($form);
 		});
 	});
 
-	rewrite.table(form, main, form);
-	rewrite.css(form, style);
-	rewrite.hash(form);
+	$cssToggle.click(function(){
+		if($css.prop("hidden")) {
+			$cssToggle.attr("aria-expanded", "true");
+			$css.prop("hidden", false).focus();
+		} else {
+			$css.prop("hidden", true);
+			$cssToggle.attr("aria-expanded", "false").focus();
+		}
+	});
+
+	rewrite.table($form, $main, $form);
+	rewrite.css($form, $style);
+	rewrite.hash($form);
 });

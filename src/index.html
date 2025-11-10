@@ -12,11 +12,11 @@
 		<meta name="author" property="dc11:creator" content="qq542vev" />
 		<meta name="copyright" property="dc11:rights" content="Copyright © 2025-2025 qq542vev. Some rights reserved." />
 		<meta name="dcterms.created" property="dcterms:created" datatype="dcterms:W3CDTF" content="2025-07-20" />
-		<meta name="dcterms.modified" property="dcterms:modified" datatype="dcterms:W3CDTF" content="2025-10-04" />
+		<meta name="dcterms.modified" property="dcterms:modified" datatype="dcterms:W3CDTF" content="2025-11-10" />
 		<meta name="description" property="dcterms:description" content="CSVを貼るだけで印刷可能な両面暗記カードを生成するシングルファイルアプリ(HTML/CSS/JS)。" />
 		<meta name="keywords" property="schema:keywords" content="暗記カード,印刷" />
 		<meta name="robots" content="index,follow" />
-		<meta name="version" property="schema:version" content="1.1.4" />
+		<meta name="version" property="schema:version" content="1.2.0" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 
 		<title property="dcterms:title">暗記カード生成器</title>
@@ -35,7 +35,7 @@
 	<body>
 		<header id="header">
 			<form id="form" action="?" method="get">
-				<p><textarea id="csv" title="# 最大4列のCSV文字列を入力してください。&#xA;問題,解答,問題のCSS(省略可),解答のCSS(省略可)" placeholder="# 最大4列のCSV文字列を入力してください。&#xA;例) 問題,解答,問題のCSS(省略可),解答のCSS(省略可)&#xA;H,水素,color:blue;&#xA;He,ヘリウム,color:orange;&#xA;Na,ナトリウム,color:green;,color:gray;" required="required" name="csv">WebブラウザーのJavaScriptを有効にしてください。</textarea></p>
+				<p><textarea id="csv" title="# 最大4列のCSV文字列を入力してください。&#xD;&#xA;問題,解答,問題のCSS(省略可),解答のCSS(省略可)" placeholder="# 最大4列のCSV文字列を入力してください。&#xD;&#xA;例) 問題,解答,問題のCSS(省略可),解答のCSS(省略可)&#xD;&#xA;H,水素,color:blue;&#xD;&#xA;He,ヘリウム,color:orange;&#xD;&#xA;Na,ナトリウム,color:green;,color:gray;" required="required" name="csv">WebブラウザーのJavaScriptを有効にしてください。</textarea></p>
 
 				<ul>
 					<li><label for="row"><input id="row" required="required" name="row" type="number" min="1" step="1" value="6" />行</label></li>
@@ -55,7 +55,10 @@
 					<li><label for="grid">グリッド線の間隔: <input id="grid" required="required" name="grid" type="number" min="0" step="any" value="0" />mm</label></li>
 					<li><label title="問題と解答でHTMLタグが有効になります。" for="html">HTMLタグを有効: <input id="html" name="html" type="checkbox" value="1" /></label></li>
 					<li><button type="button" onclick="print();">印刷</button></li>
+					<li><button id="css-toggle" type="button" aria-expanded="true" aria-controls="css">CSSを編集</button></li>
 				</ul>
+
+				<p><textarea id="css" title="任意のCSSを入力します。表面カードテーブルのセレクタは.front-cards、裏面カードテーブルのセレクタは.back-cardsです。" placeholder="/* 表面カードの文字を太字に指定。 */&#xD;&#xA;.front-cards td {&#xD;&#xA;    font-weight: bold;&#xD;&#xA;}&#xD;&#xA;&#xD;&#xA;/* 裏面カードの余白を2mmに指定。 */&#xD;&#xA;.back-cards td {&#xD;&#xA;    padding: 2mm;&#xA;}" name="css" hidden="true"></textarea></p>
 			</form>
 		</header>
 
