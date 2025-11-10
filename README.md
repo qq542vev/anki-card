@@ -1,22 +1,22 @@
-<!-- Document: README.md
+<!-- document: readme.md
 
 「暗記カード生成器」の日本語マニュアル。
 
-Metadata:
+metadata:
 
 	id - 3db72088-ba41-462f-91de-7284bf80422d
 	author - <qq542vev at https://purl.org/meta/me/>
 	version - 0.1.1
 	created - 2020-09-01
 	modified - 2025-09-07
-	copyright - Copyright (C) 2025-2025 qq542vev. Some rights reserved.
-	license - <AGPL-3.0-only at https://www.gnu.org/licenses/agpl-3.0.txt>
+	copyright - Copyright (c) 2025-2025 qq542vev. some rights reserved.
+	license - <agpl-3.0-only at https://www.gnu.org/licenses/agpl-3.0.txt>
 	conforms-to - <https://spec.commonmark.org/current/>
 
-See Also:
+see also:
 
-	* <Project homepage at https://github.com/qq542vev/anki-card>
-	* <Bug report at https://github.com/qq542vev/anki-card/issues>
+	* <project homepage at https://github.com/qq542vev/anki-card>
+	* <bug report at https://github.com/qq542vev/anki-card/issues>
 -->
 
 # 暗記カード生成器
